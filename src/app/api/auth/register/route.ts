@@ -15,7 +15,16 @@ const registerSchema = z.object({
     address: z.string().optional(),
     phone: z.string().optional(),
     description: z.string().optional(),
-    website: z.string().url('Invalid URL').optional().or(z.literal(''))
+    website: z.string().url('Invalid URL').optional().or(z.literal('')),
+    verificationDocumentUrl: z.string().optional()
+}).refine((data) => {
+    if (data.role === 'ngo' && !data.verificationDocumentUrl) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Verification document is required for NGOs",
+    path: ["verificationDocumentUrl"]
 });
 
 export async function POST(req: NextRequest) {
@@ -27,7 +36,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: parseResult.error.issues[0].message }, { status: 400 });
         }
 
-        const { name, email, password, role, pincode, address, phone, description, website } = parseResult.data;
+        const { name, email, password, role, pincode, address, phone, description, website, verificationDocumentUrl } = parseResult.data;
 
         await connectToDatabase();
 
@@ -52,6 +61,7 @@ export async function POST(req: NextRequest) {
                 phone,
                 description,
                 website,
+                verificationDocumentUrl,
                 isVerified: false
             });
             return NextResponse.json({ message: 'NGO registered successfully', userId: newNgo._id }, { status: 201 });

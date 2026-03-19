@@ -15,10 +15,58 @@ export default function RegisterPage() {
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
+    const [uploadSuccess, setUploadSuccess] = useState('');
+    const [uploadedFileName, setUploadedFileName] = useState('');
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Custom validation for immediate feedback
+        const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedTypes.includes(file.type)) {
+            setError('Only PDF, PNG, and JPG files are allowed.');
+            return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            setError('File size must be less than 10MB.');
+            return;
+        }
+
+        setUploading(true);
+        setError('');
+        setUploadSuccess('');
+
+        try {
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
+
+            const res = await fetch('/api/upload-document', {
+                method: 'POST',
+                body: uploadFormData,
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Upload failed');
+            }
+
+            setFormData({ ...formData, verificationDocumentUrl: data.documentUrl } as any);
+            setUploadSuccess('Verification document uploaded successfully.');
+            setUploadedFileName(file.name);
+        } catch (err: any) {
+            setError(err.message);
+        } finally {
+            setUploading(false);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -47,6 +95,7 @@ export default function RegisterPage() {
                     phone: (formData as any).phone,
                     description: (formData as any).description,
                     website: (formData as any).website,
+                    verificationDocumentUrl: (formData as any).verificationDocumentUrl,
                 }),
             });
 
@@ -291,17 +340,41 @@ export default function RegisterPage() {
                                 <div className="mt-6 pt-6 border-t border-dashed border-gray-200 animate-fade-in-up">
                                     <div className="max-w-2xl mx-auto text-center">
                                         <h3 className="text-sm font-semibold text-teal-600 uppercase tracking-wide mb-3">Verification Document</h3>
-                                        <div className="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-white transition-colors cursor-pointer group">
+                                        <label className={`flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-lg transition-colors cursor-pointer group ${uploadSuccess ? 'border-green-300 bg-green-50' : 'border-gray-300 bg-gray-50 hover:bg-white'}`}>
                                             <div className="space-y-1 text-center">
-                                                <svg className="mx-auto h-10 w-10 text-gray-400 group-hover:text-teal-500 transition-colors" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                                <div className="text-sm text-gray-600 mt-2">
-                                                    <span className="font-medium text-teal-600 hover:text-teal-500">Upload Registration / Certificate</span>
-                                                </div>
-                                                <p className="text-xs text-gray-400">PDF, PNG up to 10MB</p>
+                                                {uploading ? (
+                                                    <div className="flex flex-col items-center">
+                                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600 mb-2"></div>
+                                                        <p className="text-sm text-gray-600">Uploading certificate...</p>
+                                                    </div>
+                                                ) : uploadSuccess ? (
+                                                    <div className="flex flex-col items-center">
+                                                        <svg className="mx-auto h-10 w-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        <p className="text-sm font-medium text-green-600 mt-2">{uploadSuccess}</p>
+                                                        <p className="text-xs text-gray-500 mt-1">{uploadedFileName}</p>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <svg className="mx-auto h-10 w-10 text-gray-400 group-hover:text-teal-500 transition-colors" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                        </svg>
+                                                        <div className="text-sm text-gray-600 mt-2">
+                                                            <span className="font-medium text-teal-600 hover:text-teal-500">Upload Registration / Certificate</span>
+                                                        </div>
+                                                        <p className="text-xs text-gray-400">PDF, PNG up to 10MB</p>
+                                                    </>
+                                                )}
+                                                <input 
+                                                    type="file" 
+                                                    className="hidden" 
+                                                    accept=".pdf,.png,.jpg,.jpeg"
+                                                    onChange={handleFileUpload}
+                                                    disabled={uploading}
+                                                />
                                             </div>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             )}
@@ -309,10 +382,10 @@ export default function RegisterPage() {
                             <div className="pt-4 border-t border-gray-100">
                                 <button
                                     type="submit"
-                                    disabled={loading}
+                                    disabled={loading || uploading || (isNgo && !(formData as any).verificationDocumentUrl)}
                                     className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
                                 >
-                                    {loading ? 'Creating Account...' : 'Create Account'}
+                                    {loading ? 'Creating Account...' : uploading ? 'Uploading Document...' : 'Create Account'}
                                 </button>
                             </div>
                         </form>
