@@ -24,10 +24,10 @@ export async function POST(request: NextRequest) {
       success: true,
       text,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('API /api/ocr error:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to process image' },
+      { success: false, error: error.message || 'Failed to process image' },
       { status: 500 }
     );
   }
