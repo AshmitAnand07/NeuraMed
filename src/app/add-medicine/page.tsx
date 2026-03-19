@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import OCRScanner from '@/components/OCRScanner';
 
 export default function AddMedicinePage() {
     const router = useRouter();
@@ -60,14 +61,17 @@ export default function AddMedicinePage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
                 <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Medicine</h1>
 
-                {/* Placeholder for OCR / Image Upload */}
-                <div className="mb-8 p-6 bg-teal-50 border border-teal-100 rounded-lg text-center border-dashed border-2">
-                    <p className="text-teal-700 font-medium mb-2">📸 Scan Medicine Strip</p>
-                    <button type="button" className="text-sm bg-white border border-teal-200 text-teal-600 px-4 py-2 rounded-md hover:bg-teal-50">
-                        Upload Image (Coming Soon)
-                    </button>
-                    <p className="text-xs text-gray-500 mt-2">Auto-fills name and expiry via AI</p>
-                </div>
+                {/* OCR Scanner Component */}
+                <OCRScanner onScanSuccess={(text) => {
+                    // Extract basic text to auto-fill (basic heuristic)
+                    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                    if (lines.length > 0) {
+                        setFormData(prev => ({ 
+                             ...prev, 
+                             name: lines[0].substring(0, 50) 
+                        }));
+                    }
+                }} />
 
                 <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-6">
                     {error && (

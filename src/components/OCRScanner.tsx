@@ -2,7 +2,11 @@
 
 import { useState, ChangeEvent, FormEvent } from 'react';
 
-export default function OCRScanner() {
+interface OCRScannerProps {
+  onScanSuccess?: (text: string) => void;
+}
+
+export default function OCRScanner({ onScanSuccess }: OCRScannerProps) {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [extractedText, setExtractedText] = useState<string>('');
@@ -45,6 +49,9 @@ export default function OCRScanner() {
       }
 
       setExtractedText(data.text);
+      if (onScanSuccess) {
+        onScanSuccess(data.text);
+      }
     } catch (err: any) {
       setError(err.message || 'An error occurred during OCR extraction.');
     } finally {
@@ -53,11 +60,13 @@ export default function OCRScanner() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md border border-gray-100">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">OCR Text Scanner</h2>
+    <div className="w-full mb-8 bg-teal-50 p-6 rounded-xl border border-teal-100 border-dashed border-2">
+      <h3 className="text-lg font-bold mb-4 text-teal-700 flex items-center justify-center gap-2">
+        📸 Scan Medicine Strip
+      </h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative">
+        <div className="border border-dashed border-teal-300 rounded-lg p-6 flex flex-col items-center justify-center bg-white hover:bg-gray-50 transition-colors cursor-pointer relative">
           <input
             type="file"
             accept="image/*"
