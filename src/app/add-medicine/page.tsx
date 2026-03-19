@@ -23,26 +23,36 @@ export default function AddMedicinePage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e: React.FormEvent, force: boolean = false) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setWarning(null);
         setLoading(true);
 
         try {
-            const payload = force ? { ...formData, forceAdd: true } : formData;
-
             const res = await fetch('/api/medicines', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(formData),
             });
 
             const data = await res.json();
 
-            if (res.status === 409) {
+            if (data.status === 'duplicate_warning') {
                 setWarning(data);
                 setLoading(false);
+                return;
+            }
+
+            if (data.status === 'merged') {
+                alert(data.message);
+                router.push('/dashboard');
+                return;
+            }
+
+            if (data.status === 'replaced') {
+                alert(data.message);
+                router.push('/dashboard');
                 return;
             }
 
@@ -74,7 +84,7 @@ export default function AddMedicinePage() {
                     }));
                 }} />
 
-                <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-6">
+                <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
                     {error && (
                         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
                             {error}
@@ -87,17 +97,10 @@ export default function AddMedicinePage() {
                             <div className="flex gap-4">
                                 <button
                                     type="button"
-                                    onClick={(e) => handleSubmit(e as any, true)}
+                                    onClick={() => { setWarning(null); setLoading(false); }}
                                     className="bg-yellow-600 text-white px-3 py-1.5 rounded text-sm hover:bg-yellow-700"
                                 >
-                                    Add Anyway
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => { setWarning(null); setLoading(false); }}
-                                    className="text-gray-600 text-sm hover:underline"
-                                >
-                                    Cancel
+                                    Got it
                                 </button>
                             </div>
                         </div>

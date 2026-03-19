@@ -72,27 +72,44 @@ export async function POST(req: NextRequest) {
 
         await connectToDatabase();
 
-        // DUPLICATE CHECK
-        // "If the same medicine already exists in inventory"
-        // We check name and optional strength? Just name for now.
-        // Case insensitive?
+        // INTELLIGENT DUPLICATE CHECK
+        // Rule: Check case-insensitive name across ALL family members for this user.
         const existing = await Medicine.findOne({
             userId: String(payload.id),
-            name: { $regex: new RegExp(`^${name}$`, 'i') },
-            status: { $ne: 'expired' } // Allow if previous was expired? Maybe.
+            name: { $regex: new RegExp(`^${name}$`, 'i') }
         });
 
         if (existing) {
-            // We can return a specific warning code or just error
-            // The spec says "Show warning... avoid repurchase"
-            // We'll let the frontend handle the confirmation or we return a 409 Conflict with a message
-            // But if user INSISTS, we should allow?
-            if (!body.forceAdd) {
+            // Rule 3: If it's EXPIRED, delete and add fresh
+            if (existing.status === 'expired') {
+                await Medicine.findByIdAndDelete(existing._id);
+                // Continue to create new medicine below
+            } else {
+                // Rule 2: SAFE or EXPIRING
+                const existingStrips = existing.quantityStrips || 0;
+                const newStrips = body.quantityStrips ? Number(body.quantityStrips) : 0;
+
+                // Case A: More than 2 strips remaining
+                if (existingStrips > 2) {
+                    return NextResponse.json({
+                        status: "duplicate_warning",
+                        message: "You already have this medicine. Please avoid purchasing a new one."
+                    });
+                } 
+                
+                // Case B: 2 or fewer strips - Merge
+                existing.quantityStrips = existingStrips + newStrips;
+                if (body.quantityTablets) {
+                    existing.quantityTablets = (existing.quantityTablets || 0) + Number(body.quantityTablets);
+                }
+                
+                // Update expiry if new one is later? (Optional but good) - Spec didn't say, keeping old for now.
+                await existing.save();
+
                 return NextResponse.json({
-                    error: 'Duplicate Warning',
-                    message: 'You already have this medicine at home.',
-                    code: 'DUPLICATE_MEDICINE'
-                }, { status: 409 });
+                    status: "merged",
+                    message: "Medicine already exists. Strips have been added to the existing record."
+                });
             }
         }
 
@@ -112,7 +129,11 @@ export async function POST(req: NextRequest) {
             quantityTablets: body.quantityTablets ? Number(body.quantityTablets) : 0,
         });
 
-        return NextResponse.json(newMedicine, { status: 201 });
+        return NextResponse.json({
+            status: existing ? "replaced" : "created",
+            message: existing ? "Expired medicine removed and new medicine added." : "Medicine added successfully",
+            data: newMedicine
+        }, { status: 201 });
     } catch (error) {
         console.error('Medicine Create Error:', error);
         const msg = (error as Error).message || 'Internal Server Error';
