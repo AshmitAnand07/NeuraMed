@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, AlertTriangle, Heart, Package, Search } from 'lucide-react';
+import DisposalModal from '@/components/DisposalModal';
 
 interface Medicine {
     _id: string;
@@ -19,6 +20,7 @@ export default function Dashboard() {
     const router = useRouter();
     const [medicines, setMedicines] = useState<Medicine[]>([]);
     const [stats, setStats] = useState({ total: 0, expiring: 0, expired: 0, donated: 0 });
+    const [disposalModal, setDisposalModal] = useState({ isOpen: false, medicineId: '', medicineName: '' });
 
     useEffect(() => {
         if (!loading && !user) {
@@ -28,36 +30,30 @@ export default function Dashboard() {
         if (user?.role === 'ngo') router.push('/ngo-dashboard');
         if (user?.role === 'admin') router.push('/admin-dashboard');
 
-        // Fetch data
-        const fetchData = async () => {
-            try {
-                const res = await fetch('/api/medicines');
-                if (res.ok) {
-                    const data = await res.json();
-
-
-                    // Calculate stats
-                    const availableMedicines = data.filter((m: any) => {
-                        const remStrips = (m.quantityStrips || 0) - (m.donatedStrips || 0);
-                        const remTablets = (m.quantityTablets || 0) - (m.donatedTablets || 0);
-                        return remStrips > 0 || remTablets > 0;
-                    });
-                    setMedicines(availableMedicines);
-
-                    const total = availableMedicines.length;
-                    const expiring = availableMedicines.filter((m: any) => m.status === 'expiring').length;
-                    const expired = availableMedicines.filter((m: any) => m.status === 'expired').length;
-                    const donated = data.filter((m: any) => (m.donatedStrips > 0 || m.donatedTablets > 0) || m.isDonated).length;
-                    
-                    setStats({ total, expiring, expired, donated });
-                }
-            } catch (e) {
-                console.error("Failed to fetch medicines");
-            }
-        };
-
         if (user) fetchData();
     }, [user, loading, router]);
+
+    const fetchData = async () => {
+        try {
+            const res = await fetch('/api/medicines');
+            if (res.ok) {
+                const data = await res.json();
+                const availableMedicines = data.filter((m: any) => {
+                    const remStrips = (m.quantityStrips || 0) - (m.donatedStrips || 0);
+                    const remTablets = (m.quantityTablets || 0) - (m.donatedTablets || 0);
+                    return remStrips > 0 || remTablets > 0;
+                });
+                setMedicines(availableMedicines);
+                const total = availableMedicines.length;
+                const expiring = availableMedicines.filter((m: any) => m.status === 'expiring').length;
+                const expired = availableMedicines.filter((m: any) => m.status === 'expired').length;
+                const donated = data.filter((m: any) => (m.donatedStrips > 0 || m.donatedTablets > 0) || m.isDonated).length;
+                setStats({ total, expiring, expired, donated });
+            }
+        } catch (e) {
+            console.error("Failed to fetch medicines");
+        }
+    };
 
     if (loading || !user) return <div className="p-8 text-center text-teal-600">Loading Dashboard...</div>;
 
@@ -146,7 +142,12 @@ export default function Dashboard() {
                                             </Link>
                                         )}
                                         {med.status === 'expired' && (
-                                            <span className="text-gray-400 text-xs">Dispose Safely</span>
+                                            <button 
+                                                onClick={() => setDisposalModal({ isOpen: true, medicineId: med._id, medicineName: med.name })}
+                                                className="text-red-600 hover:text-red-800 font-medium text-sm"
+                                            >
+                                                Dispose Safely
+                                            </button>
                                         )}
                                     </td>
                                 </tr>
@@ -155,6 +156,14 @@ export default function Dashboard() {
                     </table>
                 )}
             </div>
+
+            <DisposalModal 
+                isOpen={disposalModal.isOpen}
+                onClose={() => setDisposalModal({ ...disposalModal, isOpen: false })}
+                medicineId={disposalModal.medicineId}
+                medicineName={disposalModal.medicineName}
+                onDisposed={fetchData}
+            />
         </div>
     );
 }
