@@ -8,8 +8,7 @@ export interface ParsedMedicineData {
 function parseDate(dateStr: string): string | null {
   if (!dateStr) return null;
 
-  const datePattern = /(\d{1,2})[\/.-](\d{2,4})/;
-  const match = dateStr.match(datePattern);
+  const match = dateStr.match(/(\d{1,2})[\/.-](\d{2,4})/);
   if (!match) return null;
 
   let month = match[1];
@@ -31,7 +30,7 @@ export function parseMedicineOCR(text: string): ParsedMedicineData {
 
   const lines = text
     .split("\n")
-    .map((l) => l.trim())
+    .map(l => l.trim())
     .filter(Boolean);
 
   const excludeKeywords = [
@@ -46,8 +45,10 @@ export function parseMedicineOCR(text: string): ParsedMedicineData {
   const shortFragments = ["ip", "bp", "usp", "rx", "®"];
 
   const mrpRegex = /(?:MRP|₹|Rs\.?)\s*[:.-]?\s*(\d+(?:\.\d+)?)/i;
-  const expiryRegex = /(?:EXP|Expiry(?: Date)?)\s*[:.-]?\s*(\d{1,2}[\/.-]\d{2,4})/i;
-  const mfgRegex = /(?:MFD|Mfg(?: Date)?|Manufactured)\s*[:.-]?\s*(\d{1,2}[\/.-]\d{2,4})/i;
+  const expiryRegex =
+    /(?:EXP|Expiry(?: Date)?|Use Before|Best Before)\s*[:.-]?\s*(\d{1,2}[\/.-]\d{2,4})/i;
+  const mfgRegex =
+    /(?:MFD|Mfg(?: Date)?|Manufactured)\s*[:.-]?\s*(\d{1,2}[\/.-]\d{2,4})/i;
 
   let medicineCandidate = "";
   let bestScore = -1;
@@ -72,7 +73,7 @@ export function parseMedicineOCR(text: string): ParsedMedicineData {
       }
     }
 
-    // Mfg
+    // Manufacturing
     if (!result.manufacturingDate) {
       const mfg = line.match(mfgRegex);
       if (mfg) {
@@ -81,14 +82,15 @@ export function parseMedicineOCR(text: string): ParsedMedicineData {
       }
     }
 
-    // collect fallback dates
+    // collect all date-like values
     const fallback = line.match(/\b\d{1,2}[\/.-]\d{2,4}\b/g);
     if (fallback) detectedDates.push(...fallback);
 
-    // medicine name detection
+    // Medicine name detection
     const words = line.split(/\s+/);
-    const isExcluded = excludeKeywords.some((k) => lower.includes(k));
+    const isExcluded = excludeKeywords.some(k => lower.includes(k));
     const isShort = shortFragments.includes(lower);
+
     const mostlyLetters =
       (line.match(/[a-zA-Z]/g) || []).length / line.length > 0.5;
 
@@ -114,7 +116,7 @@ export function parseMedicineOCR(text: string): ParsedMedicineData {
   // fallback date detection
   if ((!result.manufacturingDate || !result.expiryDate) && detectedDates.length >= 2) {
     const parsedDates = detectedDates
-      .map((d) => parseDate(d))
+      .map(d => parseDate(d))
       .filter(Boolean) as string[];
 
     parsedDates.sort();
