@@ -37,7 +37,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     localStorage.removeItem('medicare_user');
                 }
             } catch (error) {
-                console.error("Session check failed", error);
+                if (process.env.NODE_ENV === 'development') {
+                    console.error("Session check failed", error);
+                }
                 setUser(null);
             } finally {
                 setLoading(false);

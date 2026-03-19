@@ -120,7 +120,7 @@ export async function DELETE(req: NextRequest) {
 
         await connectToDatabase();
 
-        const deleted = await Medicine.findOneAndDelete({ _id: id, userId: payload.id });
+        const deleted = await Medicine.findOneAndDelete({ _id: id, userId: String(payload.id) });
         if (!deleted) return NextResponse.json({ error: 'Medicine not found or unauthorized' }, { status: 404 });
 
         // Cascade delete: Remove associated donation request

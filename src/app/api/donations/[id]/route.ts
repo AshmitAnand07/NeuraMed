@@ -34,6 +34,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
         return NextResponse.json(donation);
     } catch (error) {
+        console.error('Donation PATCH Error:', (error as Error).message);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

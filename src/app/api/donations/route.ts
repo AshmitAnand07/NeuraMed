@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json(donations.filter((d: any) => d.medicineId));
         }
     } catch (error) {
-        console.error(error);
+        console.error('Donations GET Error:', (error as Error).message);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(donation, { status: 201 });
     } catch (error) {
-        console.error(error);
+        console.error('Donation POST Error:', (error as Error).message);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

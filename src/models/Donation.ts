@@ -33,10 +33,7 @@ const DonationSchema = new Schema<IDonation>({
     completedAt: { type: Date },
 }, { timestamps: true });
 
-// Prevent overwrite on hot reload while keeping fresh schema
-if (mongoose.models.Donation) {
-    delete mongoose.models.Donation;
-}
-const Donation: Model<IDonation> = mongoose.model<IDonation>('Donation', DonationSchema);
+// Prevent overwrite on hot reload
+const Donation: Model<IDonation> = mongoose.models.Donation || mongoose.model<IDonation>('Donation', DonationSchema);
 
 export default Donation;

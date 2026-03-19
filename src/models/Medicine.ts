@@ -34,10 +34,7 @@ const MedicineSchema = new Schema<IMedicine>({
     isDonated: { type: Boolean, default: false },
 }, { timestamps: true });
 
-// Prevent overwrite on hot reload while keeping fresh schema
-if (mongoose.models.Medicine) {
-    delete mongoose.models.Medicine;
-}
-const Medicine: Model<IMedicine> = mongoose.model<IMedicine>('Medicine', MedicineSchema);
+// Prevent overwrite on hot reload
+const Medicine: Model<IMedicine> = mongoose.models.Medicine || mongoose.model<IMedicine>('Medicine', MedicineSchema);
 
 export default Medicine;
