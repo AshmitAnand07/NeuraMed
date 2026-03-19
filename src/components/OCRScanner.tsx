@@ -118,14 +118,7 @@ export default function OCRScanner({ onScanSuccess }: OCRScannerProps) {
         </div>
       )}
 
-      {extractedText && (
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Extracted Text</h3>
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 whitespace-pre-wrap text-gray-700 font-mono text-sm shadow-inner min-h-[100px] max-h-[400px] overflow-y-auto">
-            {extractedText}
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }

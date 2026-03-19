@@ -5,36 +5,41 @@ export interface ParsedMedicineData {
   mrp?: string;
 }
 
-function formatDateForInput(dateStr: string): string {
-  if (!dateStr) return '';
-  // Convert standard "MM/YYYY" or "MM-YYYY" to "YYYY-MM-01"
-  const matchMMYYYY = dateStr.match(/(\d{2})[/.-](\d{4})/);
-  if (matchMMYYYY) {
-    return `${matchMMYYYY[2]}-${matchMMYYYY[1]}-01`;
-  }
+function parseDate(dateStr: string): Date | null {
+  if (!dateStr) return null;
   
-  // Convert "YY/MM" or "YYYY/MM"
-  const matchYYYYMM = dateStr.match(/(\d{4})[/.-](\d{2})/);
-  if (matchYYYYMM) {
-    return `${matchYYYYMM[1]}-${matchYYYYMM[2]}-01`;
+  // Try MM/YYYY or MM-YYYY
+  const matchMMYYYY = dateStr.match(/(\d{2})[/.-](\d{2,4})/);
+  if (matchMMYYYY) {
+    let month = parseInt(matchMMYYYY[1], 10);
+    let year = parseInt(matchMMYYYY[2], 10);
+    if (matchMMYYYY[2].length === 2) year += 2000;
+    return new Date(year, month - 1, 1);
   }
 
   // Handle formats like "OCT 2025" or "OCT 25"
-  const months: Record<string, string> = {
-    jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06',
-    jul: '07', aug: '08', sep: '09', oct: '10', nov: '11', dec: '12'
+  const months: Record<string, number> = {
+    jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
+    jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11
   };
   const matchTextDate = dateStr.match(/([A-Za-z]{3})\w*\s*[/.-]?\s*(\d{2,4})/);
   if (matchTextDate) {
-    const month = months[matchTextDate[1].toLowerCase()] || '01';
-    let year = matchTextDate[2];
-    if (year.length === 2) {
-      year = '20' + year;
+    const month = months[matchTextDate[1].toLowerCase()];
+    if (month !== undefined) {
+      let year = parseInt(matchTextDate[2], 10);
+      if (matchTextDate[2].length === 2) year += 2000;
+      return new Date(year, month, 1);
     }
-    return `${year}-${month}-01`;
   }
 
-  return '';
+  return null;
+}
+
+function formatDateForInput(date: Date | null): string {
+  if (!date) return '';
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}-01`;
 }
 
 export function parseMedicineOCR(text: string): ParsedMedicineData {
@@ -48,58 +53,80 @@ export function parseMedicineOCR(text: string): ParsedMedicineData {
   // 3. Mfg Regex
   const mfgRegex = /(?:MFD|Mfg(?: Date)?|Manufactured)\s*[:.-]?\s*([A-Za-z0-9/.-]+(?:\s+\d{2,4})?)/i;
 
-  let bestName = '';
+  const foundDates: { date: Date; type?: 'mfg' | 'exp' }[] = [];
 
-  for (const line of lines) {
+  const addressKeywords = ['road', 'street', 'school', 'temple', 'ahmedabad', 'india', 'gujarat', 'visit', 'email', 'website', 'villas', 'vasna', 'sanand', 'nagar'];
+  const companyKeywords = ['ltd', 'pvt', 'private', 'pharma', 'wellness', 'laboratories', 'manufactured', 'marketed', 'distributed', 'pharmaceuticals'];
+  const metadataKeywords = ['batch', 'licence', 'lic', 'who', 'gmp', 'certified', 'b.no', 'copyright', 'registered', 'trademark', 'keep out of reach'];
+  const medicineSuffixes = ['hydrochloride', 'sodium', 'tablets', 'capsules', 'syrup', 'suspension', 'injection', 'lp', 'ip', 'usp', 'bp', 'montelukast', 'levocetirizine', 'paracetamol', 'dolo'];
+
+  let possibleNames: { line: string; score: number }[] = [];
+
+  lines.forEach((line, index) => {
     const lower = line.toLowerCase();
 
-    // Match MRP
+    // --- MRP Detection ---
     if (!result.mrp) {
       const match = line.match(mrpRegex);
       if (match) result.mrp = match[1];
     }
-    // Match Expiry
-    if (!result.expiryDate) {
-      const match = line.match(expiryRegex);
-      if (match) {
-        const dateMatch = match[1].match(/(\d{2}[/.-]\d{2,4}|[A-Za-z]{3}\s*\d{2,4})/);
-        const rawDate = dateMatch ? dateMatch[1] : match[1];
-        result.expiryDate = formatDateForInput(rawDate);
+
+    // --- Date Detection (Labeled) ---
+    const mfgMatch = line.match(mfgRegex);
+    if (mfgMatch) {
+      const d = parseDate(mfgMatch[1]);
+      if (d) foundDates.push({ date: d, type: 'mfg' });
+    }
+
+    const expMatch = line.match(expiryRegex);
+    if (expMatch) {
+      const d = parseDate(expMatch[1]);
+      if (d) foundDates.push({ date: d, type: 'exp' });
+    }
+
+    // --- Unlabeled Date Detection (if needed) ---
+    if (!mfgMatch && !expMatch) {
+      const dateOnlyMatch = line.match(/(\d{2}[/.-]\d{2,4}|[A-Za-z]{3}\s*\d{2,4})/);
+      if (dateOnlyMatch) {
+        const d = parseDate(dateOnlyMatch[1]);
+        if (d) foundDates.push({ date: d });
       }
     }
-    // Match Mfg
-    if (!result.manufacturingDate) {
-      const match = line.match(mfgRegex);
-      if (match) {
-        const dateMatch = match[1].match(/(\d{2}[/.-]\d{2,4}|[A-Za-z]{3}\s*\d{2,4})/);
-        const rawDate = dateMatch ? dateMatch[1] : match[1];
-        result.manufacturingDate = formatDateForInput(rawDate);
-      }
-    }
 
-    // Match Medicine Name
-    const isExclusion = /batch|b\.no|mfg|mfd|exp|expiry|date|mrp|₹|rs|tablets|capsules|syrup/i.test(lower);
-    const hasNumbers = /\d/.test(line);
+    // --- Medicine Name Logic ---
+    const isExcluded = [...addressKeywords, ...companyKeywords, ...metadataKeywords].some(kw => lower.includes(kw));
+    const hasMedicineSuffix = medicineSuffixes.some(sh => lower.includes(sh));
+    
+    // Heuristic Score
+    let score = 0;
+    if (hasMedicineSuffix) score += 50;
+    if (!isExcluded) score += 20;
+    if (index < 10) score += (10 - index); // Prioritize top lines
+    if (line.length > 5 && line.length < 50) score += 10;
+    if (/^[A-Z& ]+$/.test(line)) score += 15; // UPPERCASE names are common
 
-    // Find the longest readable line without numbers and exclusions
-    if (!isExclusion && !hasNumbers && line.length > bestName.length && line.length > 3) {
-      bestName = line;
+    if (!isExcluded || hasMedicineSuffix) {
+      possibleNames.push({ line, score });
     }
+  });
+
+  // Handle Dates
+  const mfg = foundDates.find(d => d.type === 'mfg')?.date || foundDates.sort((a, b) => a.date.getTime() - b.date.getTime())[0]?.date;
+  const exp = foundDates.find(d => d.type === 'exp')?.date || foundDates.sort((a, b) => b.date.getTime() - a.date.getTime())[0]?.date;
+
+  if (mfg) result.manufacturingDate = formatDateForInput(mfg);
+  if (exp && exp !== mfg) result.expiryDate = formatDateForInput(exp);
+  else if (foundDates.length > 1) {
+    // If only one date is found, we can't be sure, but usually we want expiry
+    const sorted = foundDates.map(f => f.date).sort((a, b) => a.getTime() - b.getTime());
+    result.manufacturingDate = formatDateForInput(sorted[0]);
+    result.expiryDate = formatDateForInput(sorted[sorted.length - 1]);
   }
 
-  // Fallback: If no name found without numbers (allow some numbers e.g. Dolo 650)
-  if (!bestName) {
-    for (const line of lines) {
-       const lower = line.toLowerCase();
-       const isExclusion = /batch|b\.no|mfg|mfd|exp|expiry|date|mrp|₹|rs/i.test(lower);
-       if (!isExclusion && line.length > bestName.length && line.length > 3) {
-          bestName = line;
-       }
-    }
-  }
-
-  if (bestName) {
-    result.medicineName = bestName;
+  // Set Medicine Name
+  if (possibleNames.length > 0) {
+    possibleNames.sort((a, b) => b.score - a.score);
+    result.medicineName = possibleNames[0].line;
   }
 
   return result;
