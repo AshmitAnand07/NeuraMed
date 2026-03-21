@@ -1,13 +1,14 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { authHeaders } from '@/context/AuthContext';
+import { useAuth, authHeaders } from '@/context/AuthContext';
 import MedicineScanner from '@/components/MedicineScanner';
 import { parseMedicineOCR } from '@/lib/parseOCR';
 import PrescriptionUploader from '@/components/PrescriptionUploader';
 import { Users, User as UserIcon, Calendar, ClipboardList } from 'lucide-react';
 
 export default function AddMedicinePage() {
+    const { user, loading: authLoading } = useAuth();
     const router = useRouter();
     const [familyMembers, setFamilyMembers] = useState<{_id: string, name: string}[]>([]);
     const [formData, setFormData] = useState({
@@ -92,6 +93,21 @@ export default function AddMedicinePage() {
             setLoading(false);
         }
     };
+
+    if (authLoading) {
+        return (
+            <div className="min-h-[100dvh] flex items-center justify-center bg-gray-50">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-gray-500 font-bold animate-pulse">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return null; // AuthContext handles redirect
+    }
 
     return (
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">

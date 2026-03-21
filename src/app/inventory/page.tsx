@@ -144,7 +144,20 @@ export default function InventoryPage() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className="min-h-[100dvh] flex items-center justify-center bg-gray-50">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-gray-500 font-bold animate-pulse">Loading Inventory...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return null; // AuthContext will handle redirect
+    }
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">

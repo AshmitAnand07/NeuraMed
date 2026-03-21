@@ -44,6 +44,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const pathname = usePathname();
 
     useEffect(() => {
+        const handleAuthFailure = async () => {
+            clearAuth();
+            try {
+                await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+            } catch (e) {
+                console.error("Failed to clear cookie", e);
+            }
+            redirectIfProtected();
+        };
+
         const checkUser = async () => {
             try {
                 const token = getStoredToken();
@@ -57,17 +67,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     if (data?.user) {
                         setUser(data.user);
                     } else {
-                        clearAuth();
-                        redirectIfProtected();
+                        await handleAuthFailure();
                     }
                 } else {
-                    clearAuth();
-                    redirectIfProtected();
+                    await handleAuthFailure();
                 }
             } catch (error) {
                 console.error("Session check failed", error);
-                clearAuth();
-                redirectIfProtected();
+                await handleAuthFailure();
             } finally {
                 setLoading(false);
             }
