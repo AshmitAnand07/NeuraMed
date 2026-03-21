@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { authHeaders } from '@/context/AuthContext';
 
 interface OCRScannerProps {
   onScanSuccess?: (text: string) => void;
@@ -37,8 +38,12 @@ export default function OCRScanner({ onScanSuccess }: OCRScannerProps) {
     formData.append('image', file);
 
     try {
+      const headers = new Headers(authHeaders());
+      headers.delete('Content-Type');
+
       const response = await fetch('/api/ocr', {
         method: 'POST',
+        headers,
         body: formData,
       });
 

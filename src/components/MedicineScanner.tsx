@@ -39,9 +39,12 @@ const MedicineScanner: React.FC<MedicineScannerProps> = ({ onScanSuccess }) => {
     formData.append('image', selectedImage);
 
     try {
+      const headers = new Headers(authHeaders());
+      headers.delete('Content-Type');
+
       const response = await fetch('/api/ocr', {
         method: 'POST',
-        headers: authHeaders(),
+        headers,
         body: formData,
       });
 

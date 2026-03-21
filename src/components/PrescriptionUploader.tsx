@@ -41,9 +41,12 @@ const PrescriptionUploader: React.FC<PrescriptionUploaderProps> = ({ onUploadSuc
     formData.append('image', selectedImage);
 
     try {
+      const headers = new Headers(authHeaders());
+      headers.delete('Content-Type');
+
       const response = await fetch('/api/prescriptions/process', {
         method: 'POST',
-        headers: authHeaders(),
+        headers,
         body: formData,
       });
 

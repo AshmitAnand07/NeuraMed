@@ -8,7 +8,16 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function POST(req: NextRequest) {
     try {
-        const token = req.cookies.get('token')?.value;
+        let token: string | undefined;
+        const authHeader = req.headers.get('authorization');
+        if (authHeader?.startsWith('Bearer ')) {
+            token = authHeader.slice(7);
+        }
+
+        if (!token) {
+            token = req.cookies.get('token')?.value;
+        }
+
         if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const payload = await verifyJWT(token);
