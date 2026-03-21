@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'GEMINI_API_KEY is not configured.' }, { status: 500 });
         }
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        const model = genAI.getGenerativeModel({ model: 'gemini-3.0-flash' });
 
         const prompt = `You are an expert medical AI specializing in analyzing prescriptions.
         Extract the following information for each medicine found in the prescription image:

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Medicine name is required' }, { status: 400 });
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3.0-flash" });
 
         const prompt = `Explain how to safely dispose of the medicine: ${medicineName}. Provide safe household disposal steps. Return the response as a JSON array of strings under the key "instructions". No other text.`;
 
