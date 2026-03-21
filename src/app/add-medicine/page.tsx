@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import OCRScanner from '@/components/OCRScanner';
+import MedicineScanner from '@/components/MedicineScanner';
 import { parseMedicineOCR } from '@/lib/parseOCR';
 
 export default function AddMedicinePage() {
@@ -72,8 +72,8 @@ export default function AddMedicinePage() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
                 <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Medicine</h1>
 
-                {/* OCR Scanner Component */}
-                <OCRScanner onScanSuccess={(text) => {
+                {/* Medicine Scanner Component */}
+                <MedicineScanner onScanSuccess={(text) => {
                     const parsedData = parseMedicineOCR(text);
                     setFormData(prev => ({ 
                          ...prev, 
