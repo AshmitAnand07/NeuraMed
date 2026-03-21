@@ -1,7 +1,7 @@
 "use client";
-
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { authHeaders } from '@/context/AuthContext';
 import MedicineScanner from '@/components/MedicineScanner';
 import { parseMedicineOCR } from '@/lib/parseOCR';
 import PrescriptionUploader from '@/components/PrescriptionUploader';
@@ -34,7 +34,7 @@ export default function AddMedicinePage() {
 
     const fetchFamilyMembers = async () => {
         try {
-            const res = await fetch('/api/family-members');
+            const res = await fetch('/api/family-members', { headers: authHeaders() });
             if (res.ok) {
                 const data = await res.json();
                 setFamilyMembers(data);
@@ -67,7 +67,10 @@ export default function AddMedicinePage() {
         try {
             const res = await fetch('/api/medicines', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...authHeaders()
+                },
                 body: JSON.stringify(formData),
             });
 

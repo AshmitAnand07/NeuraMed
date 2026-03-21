@@ -39,10 +39,16 @@ export default function InventoryPage() {
 
     const fetchMedicines = async () => {
         if (user) {
-            const res = await fetch('/api/medicines');
-            const data = await res.json();
-            setMedicines(data);
-            setFilteredMedicines(data);
+            try {
+                const res = await fetch('/api/medicines', { headers: authHeaders() });
+                if (res.ok) {
+                    const data = await res.json();
+                    setMedicines(Array.isArray(data) ? data : []);
+                    setFilteredMedicines(Array.isArray(data) ? data : []);
+                }
+            } catch (err) {
+                console.error("Failed to fetch medicines", err);
+            }
         }
     };
 

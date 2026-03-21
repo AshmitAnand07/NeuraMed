@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { Camera, Upload, Loader2, AlertCircle, FileText, CheckCircle } from 'lucide-react';
+import { authHeaders } from '@/context/AuthContext';
 
 interface PrescriptionUploaderProps {
   onUploadSuccess?: (medicines: any[]) => void;
@@ -42,6 +43,7 @@ const PrescriptionUploader: React.FC<PrescriptionUploaderProps> = ({ onUploadSuc
     try {
       const response = await fetch('/api/prescriptions/process', {
         method: 'POST',
+        headers: authHeaders(),
         body: formData,
       });
 

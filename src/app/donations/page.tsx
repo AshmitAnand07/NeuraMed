@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, authHeaders } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Package, Calendar, MapPin, Phone, Trash2, XCircle } from 'lucide-react';
@@ -8,7 +8,7 @@ import { ArrowLeft, Package, Calendar, MapPin, Phone, Trash2, XCircle } from 'lu
 export default function DonationHistory() {
     const { user, loading: authLoading } = useAuth();
     const router = useRouter();
-    const [donations, setDonations] = useState([]);
+    const [donations, setDonations] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     
     const [cancelModalOpen, setCancelModalOpen] = useState(false);
@@ -20,7 +20,8 @@ export default function DonationHistory() {
         setIsCancelling(true);
         try {
             const res = await fetch(`/api/donations?id=${donationToCancel._id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: authHeaders()
             });
             if (res.ok) {
                 setDonations(prev => prev.filter((d: any) => d._id !== donationToCancel._id));
@@ -43,13 +44,17 @@ export default function DonationHistory() {
         }
 
         if (user) {
-            fetch('/api/donations')
-                .then(res => res.json())
+            setLoading(true);
+            fetch('/api/donations', { headers: authHeaders() })
+                .then(res => res.ok ? res.json() : [])
                 .then(data => {
-                    setDonations(data);
+                    setDonations(Array.isArray(data) ? data : []);
                     setLoading(false);
                 })
-                .catch(err => setLoading(false));
+                .catch(err => {
+                    console.error("Donation fetch failed", err);
+                    setLoading(false);
+                });
         }
     }, [authLoading, user, router]);
 

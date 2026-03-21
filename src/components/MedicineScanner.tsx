@@ -3,6 +3,7 @@
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { Camera, Upload, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
+import { authHeaders } from '@/context/AuthContext';
 
 interface MedicineScannerProps {
   onScanSuccess?: (text: string) => void;
@@ -40,6 +41,7 @@ const MedicineScanner: React.FC<MedicineScannerProps> = ({ onScanSuccess }) => {
     try {
       const response = await fetch('/api/ocr', {
         method: 'POST',
+        headers: authHeaders(),
         body: formData,
       });
 

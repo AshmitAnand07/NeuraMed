@@ -51,20 +51,9 @@ export async function middleware(request: NextRequest) {
     // 2. Authentication & Authorization Routing
     const token = request.cookies.get('token')?.value;
 
-    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
     const isAuthRoute = authRoutes.some(route => pathname.startsWith(route));
 
-    if (isProtectedRoute) {
-        if (!token) {
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-
-        const payload = await verifyJWT(token);
-        if (!payload) {
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
-    }
-
+    // Only redirect AWAY from login/register if we have a hard cookie
     if (isAuthRoute && token) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
     }
