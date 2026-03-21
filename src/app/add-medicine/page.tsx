@@ -107,48 +107,48 @@ export default function AddMedicinePage() {
                     )}
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Medicine Name</label>
+                        <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Medicine Name</label>
                         <input
                             name="name"
                             type="text"
                             required
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 text-gray-900"
+                            className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 text-gray-900 outline-none transition"
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="e.g. Dolo 650"
                         />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Manufacturing Date</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Manufacturing Date</label>
                             <input
                                 name="manufacturingDate"
                                 type="date"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition bg-white"
                                 value={formData.manufacturingDate}
                                 onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Expiry Date</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Expiry Date</label>
                             <input
                                 name="expiryDate"
                                 type="date"
                                 required
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition bg-white"
                                 value={formData.expiryDate}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Category</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Category</label>
                             <select
                                 name="category"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition bg-white"
                                 value={formData.category}
                                 onChange={handleChange}
                             >
@@ -161,37 +161,37 @@ export default function AddMedicinePage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Quantity (Strips)</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Quantity (Strips)</label>
                             <input
                                 name="quantityStrips"
                                 type="number"
                                 placeholder="0"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition"
                                 value={(formData as any).quantityStrips || ''}
                                 onChange={handleChange}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Quantity (Tablets)</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Quantity (Tablets)</label>
                             <input
                                 name="quantityTablets"
                                 type="number"
                                 placeholder="0"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition"
                                 value={(formData as any).quantityTablets || ''}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Family Member</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">Family Member</label>
                             <select
                                 name="familyMember"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition bg-white"
                                 value={formData.familyMember}
                                 onChange={handleChange}
                             >
@@ -203,23 +203,23 @@ export default function AddMedicinePage() {
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">MRP (Optional)</label>
+                            <label className="block text-base sm:text-lg font-bold text-gray-700 mb-2">MRP (Optional)</label>
                             <input
                                 name="mrp"
                                 type="number"
                                 placeholder="₹"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                                className="w-full px-4 py-3 sm:py-4 text-lg border-2 border-gray-300 rounded-xl focus:ring-4 focus:ring-teal-100 focus:border-teal-500 outline-none transition"
                                 value={formData.mrp}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
 
-                    <div className="pt-4">
+                    <div className="pt-6 pb-20 sm:pb-0">
                         <button
                             type="submit"
                             disabled={loading || !!warning}
-                            className="w-full bg-teal-600 text-white py-3 px-4 rounded-md font-medium hover:bg-teal-700 transition shadow-sm disabled:opacity-50"
+                            className="w-full bg-teal-600 text-white py-4 sm:py-4 rounded-xl font-extrabold text-xl hover:bg-teal-700 transition shadow-sm border border-teal-700 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50"
                         >
                             {loading ? 'Adding...' : 'Add Medicine'}
                         </button>

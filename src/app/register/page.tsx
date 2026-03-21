@@ -129,20 +129,20 @@ export default function RegisterPage() {
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
 
                     {/* Card Header (Fixed) */}
-                    <div className="px-8 py-6 border-b border-gray-100 bg-white">
+                    <div className="px-6 sm:px-8 py-6 border-b border-gray-100 bg-white">
                         <div className="text-center">
-                            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+                            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
                                 Create your account
                             </h2>
-                            <p className="mt-2 text-sm text-gray-600">
+                            <p className="mt-3 text-base sm:text-lg text-gray-600">
                                 Join NeuraMed AI to help your community
                             </p>
                         </div>
                     </div>
 
                     {/* Scrollable Form Content */}
-                    <div className="px-8 py-6 overflow-y-auto custom-scrollbar">
-                        <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="px-6 sm:px-8 py-6 overflow-y-auto custom-scrollbar">
+                        <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
                             {error && (
                                 <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -157,27 +157,27 @@ export default function RegisterPage() {
 
                                 {/* Column 1: Account Info */}
                                 <div className="space-y-4">
-                                    <h3 className={`text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2 ${!isNgo && 'hidden'}`}>Account Info</h3>
+                                    <h3 className={`text-base font-semibold text-gray-500 uppercase tracking-wide mb-3 ${!isNgo && 'hidden'}`}>Account Info</h3>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name / Org Name</label>
+                                        <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Full Name / Org Name</label>
                                         <input suppressHydrationWarning
                                             name="name"
                                             type="text"
                                             required
-                                            className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                            className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                             placeholder={isNgo ? "Organization Name" : "John Doe"}
                                             value={formData.name}
                                             onChange={handleChange}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                        <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Email Address</label>
                                         <input suppressHydrationWarning
                                             name="email"
                                             type="email"
                                             required
-                                            className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                            className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                             placeholder="email@example.com"
                                             value={formData.email}
                                             onChange={handleChange}
@@ -186,25 +186,25 @@ export default function RegisterPage() {
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                                            <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Role</label>
                                             <select suppressHydrationWarning
                                                 name="role"
-                                                className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow bg-white"
+                                                className="block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow bg-white"
                                                 value={formData.role}
                                                 onChange={handleChange}
                                             >
                                                 <option value="user">Household User</option>
-                                                <option value="ngo">NGO / Charity</option>
+                                                <option value="ngo">NGO</option>
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
+                                            <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Pincode</label>
                                             <input suppressHydrationWarning
                                                 name="pincode"
                                                 type="text"
                                                 required
                                                 placeholder="e.g. 110001"
-                                                className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                                className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                                 value={formData.pincode}
                                                 onChange={handleChange}
                                             />
@@ -219,15 +219,15 @@ export default function RegisterPage() {
 
                                             {/* NGO Details (Left Half of Right Section) */}
                                             <div className="space-y-4">
-                                                <h3 className="text-sm font-semibold text-teal-600 uppercase tracking-wide mb-2">Organization Details</h3>
+                                                <h3 className="text-base font-semibold text-teal-600 uppercase tracking-wide mb-3">Organization Details</h3>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                                    <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Address</label>
                                                     <input suppressHydrationWarning
                                                         name="address"
                                                         type="text"
                                                         required
-                                                        className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                                                        className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg"
                                                         value={(formData as any).address || ''}
                                                         onChange={handleChange}
                                                     />
@@ -235,23 +235,23 @@ export default function RegisterPage() {
 
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                                        <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Phone</label>
                                                         <input suppressHydrationWarning
                                                             name="phone"
                                                             type="tel"
                                                             required
-                                                            className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                                                            className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg"
                                                             value={(formData as any).phone || ''}
                                                             onChange={handleChange}
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                                                        <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Website</label>
                                                         <input suppressHydrationWarning
                                                             name="website"
                                                             type="url"
                                                             placeholder="https://"
-                                                            className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                                                            className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg"
                                                             value={(formData as any).website || ''}
                                                             onChange={handleChange}
                                                         />
@@ -261,27 +261,27 @@ export default function RegisterPage() {
 
                                             {/* Security (Right Half of Right Section) */}
                                             <div className="space-y-4">
-                                                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Security</h3>
+                                                <h3 className="text-base font-semibold text-gray-500 uppercase tracking-wide mb-3">Security</h3>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                                    <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Password</label>
                                                     <input suppressHydrationWarning
                                                         name="password"
                                                         type="password"
                                                         required
-                                                        className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                                        className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                                         value={formData.password}
                                                         onChange={handleChange}
                                                     />
                                                 </div>
 
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                                                    <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Confirm Password</label>
                                                     <input suppressHydrationWarning
                                                         name="confirmPassword"
                                                         type="password"
                                                         required
-                                                        className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                                        className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                                         value={formData.confirmPassword}
                                                         onChange={handleChange}
                                                     />
@@ -291,12 +291,12 @@ export default function RegisterPage() {
 
                                         {/* Mission (Spanning both cols) */}
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Mission / Description</label>
+                                            <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Mission / Description</label>
                                             <textarea suppressHydrationWarning
                                                 name="description"
                                                 rows={3}
                                                 required
-                                                className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                                                className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg"
                                                 value={(formData as any).description || ''}
                                                 onChange={(e: any) => handleChange(e)}
                                             />
@@ -306,26 +306,26 @@ export default function RegisterPage() {
 
                                 {/* Standard Security Field for Users (Hidden for NGO) */}
                                 {!isNgo && (
-                                    <div className="space-y-4">
-                                        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-2">Security</h3>
+                                    <div className="space-y-4 pt-2">
+                                        <h3 className="text-base font-semibold text-gray-500 uppercase tracking-wide mb-3">Security</h3>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                            <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Password</label>
                                             <input suppressHydrationWarning
                                                 name="password"
                                                 type="password"
                                                 required
-                                                className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                                className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                                 value={formData.password}
                                                 onChange={handleChange}
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                                            <label className="block text-base font-medium text-gray-700 mb-1 pl-1">Confirm Password</label>
                                             <input suppressHydrationWarning
                                                 name="confirmPassword"
                                                 type="password"
                                                 required
-                                                className="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm transition-shadow"
+                                                className="appearance-none block w-full px-4 py-3.5 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base sm:text-lg transition-shadow"
                                                 value={formData.confirmPassword}
                                                 onChange={handleChange}
                                             />
@@ -379,11 +379,11 @@ export default function RegisterPage() {
                                 </div>
                             )}
 
-                            <div className="pt-4 border-t border-gray-100">
+                            <div className="pt-6 border-t border-gray-100">
                                 <button
                                     type="submit"
                                     disabled={loading || uploading || (isNgo && !(formData as any).verificationDocumentUrl)}
-                                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all shadow-md hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
+                                    className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-bold rounded-xl text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-all shadow-md active:bg-teal-800 disabled:opacity-70 disabled:cursor-not-allowed transform hover:-translate-y-0.5 active:scale-[0.98]"
                                 >
                                     {loading ? 'Creating Account...' : uploading ? 'Uploading Document...' : 'Create Account'}
                                 </button>
@@ -392,10 +392,10 @@ export default function RegisterPage() {
                     </div>
 
                     {/* Card Footer (Fixed) */}
-                    <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
-                        <p className="text-sm text-gray-600">
+                    <div className="px-6 sm:px-8 py-5 bg-gray-50 border-t border-gray-100 text-center">
+                        <p className="text-base text-gray-600">
                             Already have an account?{' '}
-                            <Link href="/login" className="font-medium text-teal-600 hover:text-teal-500 transition-colors">
+                            <Link href="/login" className="font-bold text-teal-600 hover:text-teal-700 transition-colors inline-block p-2 -m-2">
                                 Sign in here
                             </Link>
                         </p>

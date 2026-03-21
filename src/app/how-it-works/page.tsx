@@ -110,24 +110,24 @@ export default function HowItWorksPage() {
                 {/* Connecting line behind items */}
                 <div className="absolute left-11 top-10 bottom-10 w-1 bg-teal-100 -z-10 rounded-full"></div>
 
-                <div className="bg-white p-6 rounded-3xl shadow-lg shadow-teal-900/5 border border-teal-50 flex items-center gap-5 transform transition hover:-translate-y-1">
-                    <div className="bg-gradient-to-br from-teal-400 to-teal-600 text-white w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-white"><Camera className="w-6 h-6" /></div>
-                    <div><h3 className="font-bold text-gray-900 text-lg">1. You Upload</h3><p className="text-sm text-gray-600 font-medium">Scan medicine strip with AI.</p></div>
+                <div className="bg-white p-8 rounded-3xl shadow-lg shadow-teal-900/5 border border-teal-50 flex items-center gap-6 transform transition hover:-translate-y-1">
+                    <div className="bg-gradient-to-br from-teal-400 to-teal-600 text-white w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-white"><Camera className="w-8 h-8" /></div>
+                    <div><h3 className="font-bold text-gray-900 text-xl">1. You Upload</h3><p className="text-base text-gray-600 font-medium mt-1">Scan medicine strip with AI.</p></div>
                 </div>
                 
-                <div className="bg-white p-6 rounded-3xl shadow-lg shadow-teal-900/5 border border-teal-50 flex items-center gap-5 transform transition hover:-translate-y-1">
-                    <div className="bg-gradient-to-br from-teal-400 to-teal-600 text-white w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-white"><Search className="w-6 h-6" /></div>
-                    <div><h3 className="font-bold text-gray-900 text-lg">2. We Match</h3><p className="text-sm text-gray-600 font-medium">Connect with nearby NGOs.</p></div>
+                <div className="bg-white p-8 rounded-3xl shadow-lg shadow-teal-900/5 border border-teal-50 flex items-center gap-6 transform transition hover:-translate-y-1">
+                    <div className="bg-gradient-to-br from-teal-400 to-teal-600 text-white w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-white"><Search className="w-8 h-8" /></div>
+                    <div><h3 className="font-bold text-gray-900 text-xl">2. We Match</h3><p className="text-base text-gray-600 font-medium mt-1">Connect with nearby NGOs.</p></div>
                 </div>
                 
-                <div className="bg-white p-6 rounded-3xl shadow-lg shadow-teal-900/5 border border-teal-50 flex items-center gap-5 transform transition hover:-translate-y-1">
-                    <div className="bg-gradient-to-br from-teal-400 to-teal-600 text-white w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-white"><Truck className="w-6 h-6" /></div>
-                    <div><h3 className="font-bold text-gray-900 text-lg">3. They Collect</h3><p className="text-sm text-gray-600 font-medium">Pickup and safety check.</p></div>
+                <div className="bg-white p-8 rounded-3xl shadow-lg shadow-teal-900/5 border border-teal-50 flex items-center gap-6 transform transition hover:-translate-y-1">
+                    <div className="bg-gradient-to-br from-teal-400 to-teal-600 text-white w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-white"><Truck className="w-8 h-8" /></div>
+                    <div><h3 className="font-bold text-gray-900 text-xl">3. They Collect</h3><p className="text-base text-gray-600 font-medium mt-1">Pickup and safety check.</p></div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-teal-500 to-teal-700 text-white p-6 rounded-3xl shadow-xl shadow-teal-900/20 border-2 border-white/20 flex items-center gap-5 transform transition hover:-translate-y-1">
-                    <div className="bg-white text-teal-600 w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-teal-600"><Heart className="w-6 h-6 fill-current" /></div>
-                    <div><h3 className="font-bold text-lg text-white">4. Life Saved</h3><p className="text-sm text-teal-100 font-medium">Patient receives help.</p></div>
+                <div className="bg-gradient-to-br from-teal-500 to-teal-700 text-white p-8 rounded-3xl shadow-xl shadow-teal-900/20 border-2 border-white/20 flex items-center gap-6 transform transition hover:-translate-y-1">
+                    <div className="bg-white text-teal-600 w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ring-4 ring-teal-600"><Heart className="w-8 h-8 fill-current" /></div>
+                    <div><h3 className="font-bold text-xl text-white">4. Life Saved</h3><p className="text-base text-teal-100 font-medium mt-1">Patient receives help.</p></div>
                 </div>
             </div>
 
@@ -186,9 +186,9 @@ export default function HowItWorksPage() {
 
             {/* CTA */}
             <div className="bg-teal-900 py-20 px-4 text-center">
-                <h2 className="text-3xl font-bold text-white mb-8">Ready to start the cycle?</h2>
+                <h2 className="text-4xl font-extrabold text-white mb-10">Ready to start the cycle?</h2>
                 <Link href="/add-medicine">
-                    <button className="bg-white text-teal-900 px-10 py-4 rounded-full font-bold text-lg hover:bg-teal-50 transition shadow-[0_10px_30px_rgba(255,255,255,0.2)] transform hover:-translate-y-1">
+                    <button className="bg-white text-teal-900 px-10 sm:px-12 py-5 sm:py-6 rounded-[2rem] font-black text-xl sm:text-2xl hover:bg-teal-50 transition shadow-[0_10px_30px_rgba(255,255,255,0.2)] transform hover:-translate-y-1 active:scale-95 w-full sm:w-auto">
                         Donate Your First Medicine
                     </button>
                 </Link>
