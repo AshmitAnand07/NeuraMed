@@ -120,16 +120,12 @@ export default function Navbar() {
                             )}
                         </div>
 
-                        {/* Mobile Hamburger (Only for unauthenticated or non-core pages) */}
-                        <div className="md:hidden flex items-center">
-                            {user && <span className="mr-4 font-bold text-gray-700">Hi, {user.name.split(' ')[0]}</span>}
-                            <button
+                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="text-gray-600 hover:text-teal-600 focus:outline-none p-2 bg-gray-50 rounded-lg"
+                                className="text-gray-600 hover:text-teal-600 focus:outline-none p-2 bg-gray-50 rounded-lg ml-auto"
                             >
                                 {isOpen ? <X size={32} /> : <Menu size={32} />}
                             </button>
-                        </div>
                     </div>
                 </div>
 
@@ -137,6 +133,12 @@ export default function Navbar() {
                 {isOpen && (
                     <div className="md:hidden bg-white border-t border-gray-100 pb-6 pt-4 absolute w-full shadow-2xl z-50">
                         <div className="px-4 space-y-3">
+                            {user && (
+                                <div className="px-4 py-4 mb-4 bg-teal-50 rounded-xl border border-teal-100">
+                                    <p className="text-gray-600 text-sm font-medium">Signed in as</p>
+                                    <p className="text-teal-900 text-xl font-black">{user.name}</p>
+                                </div>
+                            )}
                             <Link href="/about" onClick={() => setIsOpen(false)} className={isActiveMobile('/about')}>About</Link>
                             <Link href="/how-it-works" onClick={() => setIsOpen(false)} className={isActiveMobile('/how-it-works')}>How It Works</Link>
                             {user ? (
@@ -185,7 +187,7 @@ export default function Navbar() {
                 {user ? (
                     <button onClick={handleLogoutClick} className="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-red-500">
                         <UserIcon size={28} />
-                        <span className="text-xs font-bold mt-1">Profile</span>
+                        <span className="text-[10px] font-black mt-1 uppercase tracking-tight">{user.name.split(' ')[0]}</span>
                     </button>
                 ) : (
                     <Link href="/login" className="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-teal-500">
