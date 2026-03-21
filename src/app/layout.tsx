@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
+import ReminderEngine from '@/components/ReminderEngine';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen bg-gray-50 text-gray-900 text-lg md:text-base`}>
         <AuthProvider>
           <Navbar />
+          <ReminderEngine />
           <main className="min-h-[calc(100vh-64px)] pb-20 md:pb-0">
             {children}
           </main>

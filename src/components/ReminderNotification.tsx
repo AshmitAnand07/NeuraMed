@@ -9,6 +9,7 @@ interface Medicine {
   dosage: string;
   time: string;
   frequency: string;
+  familyMember?: string;
 }
 
 interface ReminderNotificationProps {
@@ -42,7 +43,8 @@ const ReminderNotification: React.FC<ReminderNotificationProps> = ({ medicine, o
   };
 
   const playVoiceReminder = () => {
-    speak("Aapko ab dawa leni hai.");
+    const familyText = medicine.familyMember ? `${medicine.familyMember} ke liye ` : '';
+    speak(`${familyText}Dawa kha lo. Please take ${medicine.name} now.`);
   };
 
   // Auto-play on mount
@@ -107,7 +109,9 @@ const ReminderNotification: React.FC<ReminderNotificationProps> = ({ medicine, o
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
           <AlertTriangle className="w-16 h-16 text-white mx-auto mb-4 animate-pulse" />
           <h2 className="text-3xl font-black text-white leading-tight">Time for Medicine!</h2>
-          <p className="text-teal-100 mt-2 font-medium text-lg">Please take your dose now</p>
+          <p className="text-teal-100 mt-2 font-bold text-xl uppercase tracking-widest">
+            {medicine.familyMember ? `For: ${medicine.familyMember}` : 'Please take your dose'}
+          </p>
         </div>
 
         <div className="p-8">

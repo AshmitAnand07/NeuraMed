@@ -86,3 +86,35 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const decoded = await getVerifiedToken(req);
+        if (!decoded) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get('id');
+
+        if (!id) {
+            return NextResponse.json({ error: 'Missing medicine ID' }, { status: 400 });
+        }
+
+        await connectToDatabase();
+        
+        const deletedMedicine = await Medicine.findOneAndDelete({ 
+            _id: id, 
+            userId: decoded.id 
+        });
+
+        if (!deletedMedicine) {
+            return NextResponse.json({ error: 'Medicine not found or access denied' }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: 'Medicine deleted successfully' });
+    } catch (error) {
+        console.error('Medicine Delete Error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}

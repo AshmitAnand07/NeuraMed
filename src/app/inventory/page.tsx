@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, authHeaders } from '@/context/AuthContext';
 import { Search, Filter, Plus, Trash2, Heart, Check, Package, Calendar, MapPin, PartyPopper } from 'lucide-react';
 
 export default function InventoryPage() {
@@ -66,7 +66,10 @@ export default function InventoryPage() {
     const handleRemove = async (id: string) => {
         if (!confirm("Are you sure you want to remove this medicine?")) return;
         try {
-            const res = await fetch(`/api/medicines?id=${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/medicines?id=${id}`, { 
+                method: 'DELETE',
+                headers: authHeaders()
+            });
             if (res.ok) {
                 setMedicines(prev => prev.filter(m => m._id !== id));
                 setFilteredMedicines(prev => prev.filter(m => m._id !== id));

@@ -1,24 +1,28 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useAuth, authHeaders } from '@/context/AuthContext';
 import ReminderNotification from './ReminderNotification';
 
 export default function ReminderEngine() {
-  const [medicines, setMedicines] = useState<any[]>([]);
-  const [activeReminder, setActiveReminder] = useState<any | null>(null);
+   const { user } = useAuth();
+   const [medicines, setMedicines] = useState<any[]>([]);
+   const [activeReminder, setActiveReminder] = useState<any | null>(null);
 
   useEffect(() => {
-    fetchMedicines();
+    if (user) {
+      fetchMedicines();
+    }
     // Poll every minute
     const interval = setInterval(() => {
-      fetchMedicines();
+      if (user) fetchMedicines();
     }, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
 
   const fetchMedicines = async () => {
     try {
-      const res = await fetch('/api/medicines');
+      const res = await fetch('/api/medicines', { headers: authHeaders() });
       if (res.ok) {
         const data = await res.json();
         setMedicines(data);
@@ -60,7 +64,10 @@ export default function ReminderEngine() {
       // Update lastTakenDate
       const res = await fetch(`/api/medicines/${medicineId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...authHeaders()
+        },
         body: JSON.stringify({
           lastTakenDate: new Date().toISOString()
         })
@@ -81,7 +88,7 @@ export default function ReminderEngine() {
     setActiveReminder(null);
   };
 
-  if (!activeReminder) return null;
+  if (!user || !activeReminder) return null;
 
   return (
     <ReminderNotification 
