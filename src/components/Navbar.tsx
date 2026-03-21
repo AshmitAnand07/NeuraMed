@@ -70,7 +70,7 @@ export default function Navbar() {
                                 <div className="bg-teal-600 p-1.5 rounded-lg">
                                     <Pill className="h-6 w-6 text-white" />
                                 </div>
-                                <span className="font-bold text-2xl text-teal-800 tracking-tight">MediCare AI</span>
+                                <span className="font-bold text-2xl text-teal-800 tracking-tight">NeuraMed AI</span>
                             </Link>
                         </div>
 

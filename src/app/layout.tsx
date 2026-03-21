@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MediCare AI - Smart Medicine Management',
+  title: 'NeuraMed AI - Smart Medicine Management',
   description: 'Track, Donate, and Redistribute Medicines to reduce wastage.',
 };
 

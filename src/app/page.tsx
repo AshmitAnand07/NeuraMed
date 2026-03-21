@@ -10,7 +10,7 @@ export default function LandingPage() {
             Manage Medicines. <br /> <span className="text-teal-600">Save Lives.</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            MediCare AI helps you track your medicine inventory, receive expiry alerts, and donate unexpired medicines to those in need.
+            NeuraMed AI helps you track your medicine inventory, receive expiry alerts, and donate unexpired medicines to those in need.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Link href="/register" className="rounded-md bg-teal-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600">

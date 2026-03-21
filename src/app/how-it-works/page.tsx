@@ -28,7 +28,7 @@ export default function HowItWorksPage() {
                 </div>
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-10 flex flex-col items-center justify-center bg-white w-32 h-32 rounded-full shadow-lg border border-teal-50">
                     <Heart className="w-8 h-8 text-teal-500 mb-1" />
-                    <span className="font-extrabold text-lg text-teal-900 tracking-tight leading-tight">MediCare</span>
+                    <span className="font-extrabold text-lg text-teal-900 tracking-tight leading-tight">NeuraMed</span>
                     <span className="text-xs text-teal-600 font-medium">Cycle of Care</span>
                 </div>
 

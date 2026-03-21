@@ -135,7 +135,7 @@ export default function RegisterPage() {
                                 Create your account
                             </h2>
                             <p className="mt-2 text-sm text-gray-600">
-                                Join MediCare AI to help your community
+                                Join NeuraMed AI to help your community
                             </p>
                         </div>
                     </div>

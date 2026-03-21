@@ -21,10 +21,10 @@ export default function AboutPage() {
         },
         {
             id: 3,
-            name: "MediCare Plus NGO",
+            name: "NeuraMed Plus NGO",
             location: "Connaught Place, Delhi",
             work: "Distributing surplus medicines to charitable clinics across the city.",
-            image: "https://placehold.co/800x600/2dd4bf/ffffff?text=Medicare+Plus",
+            image: "https://placehold.co/800x600/2dd4bf/ffffff?text=NeuraMed+Plus",
         },
         {
             id: 4,

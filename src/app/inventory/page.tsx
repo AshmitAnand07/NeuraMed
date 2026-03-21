@@ -15,7 +15,7 @@ export default function InventoryPage() {
     const ngos = [
         { id: 1, name: "Seva Kutir Foundation" },
         { id: 2, name: "Aarogya Life Mission" },
-        { id: 3, name: "MediCare Plus NGO" },
+        { id: 3, name: "NeuraMed Plus NGO" },
         { id: 4, name: "Hope for All" }
     ];
 

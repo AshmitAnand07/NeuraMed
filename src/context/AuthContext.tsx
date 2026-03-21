@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     setUser(data.user);
                 } else {
                     setUser(null);
-                    localStorage.removeItem('medicare_user');
+                    localStorage.removeItem('neuramed_user');
                 }
             } catch (error) {
                 if (process.env.NODE_ENV === 'development') {
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const login = (userData: User) => {
         setUser(userData);
         // localStorage is kept as a backup/quick access but source of truth is cookie
-        localStorage.setItem('medicare_user', JSON.stringify(userData));
+        localStorage.setItem('neuramed_user', JSON.stringify(userData));
 
         // Redirect based on role
         if (userData.role === 'ngo') {
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         setUser(null);
-        localStorage.removeItem('medicare_user');
+        localStorage.removeItem('neuramed_user');
         router.push('/login');
     };
 
