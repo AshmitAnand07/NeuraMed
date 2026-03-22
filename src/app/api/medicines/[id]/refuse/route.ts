@@ -4,6 +4,7 @@ import Medicine from '@/models/Medicine';
 import Alert from '@/models/Alert';
 import User from '@/models/User';
 import FamilyMember from '@/models/FamilyMember';
+import Log from '@/models/Log';
 import { verifyJWT } from '@/lib/auth';
 import { cookies } from 'next/headers';
 
@@ -70,6 +71,22 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         }
 
         await medicine.save();
+
+        const currentHourLog = new Date().getHours();
+        let logTimeSlot = 'Morning';
+        if (currentHourLog >= 12 && currentHourLog < 17) logTimeSlot = 'Afternoon';
+        else if (currentHourLog >= 17 && currentHourLog < 21) logTimeSlot = 'Evening';
+        else if (currentHourLog >= 21 || currentHourLog < 6) logTimeSlot = 'Night';
+
+        await Log.create({
+            userId: decoded.id,
+            familyMemberId: medicine.familyMemberId || undefined,
+            medicineId: medicine._id,
+            medicineName: medicine.name,
+            familyMemberName: medicine.familyMember || 'Self',
+            actionTime: logTimeSlot,
+            status: 'Refused'
+        });
 
         return NextResponse.json({ medicine, alertCreated });
     } catch (error: any) {
