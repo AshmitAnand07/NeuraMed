@@ -79,23 +79,19 @@ const MedicineScanner: React.FC<MedicineScannerProps> = ({ onScanSuccess }) => {
           </div>
         </div>
 
-        {/* Hidden File Input */}
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleImageChange}
-          accept="image/*"
-          capture="environment"
-          className="hidden"
-        />
-
         {/* Upload/Preview Area */}
         <div 
-          onClick={triggerFileInput}
-          className={`relative group cursor-pointer border-[3px] border-dashed rounded-[2.5rem] transition-all duration-300 overflow-hidden flex flex-col items-center justify-center
+          className={`relative group border-[3px] border-dashed rounded-[2.5rem] transition-all duration-300 overflow-hidden flex flex-col items-center justify-center
             ${previewUrl ? 'border-teal-500 bg-teal-50/20' : 'border-teal-200 bg-white hover:border-teal-400 hover:bg-teal-50/50 shadow-sm'}
             min-h-[220px] active:scale-[0.98]`}
         >
+          <input
+            type="file"
+            onChange={handleImageChange}
+            accept="image/*"
+            capture="environment"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+          />
           {previewUrl ? (
             <div className="relative w-full h-full min-h-[200px] flex items-center justify-center p-6 bg-teal-50/50">
               <img 
