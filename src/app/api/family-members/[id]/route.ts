@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import connectToDatabase from '@/lib/db';
 import FamilyMember from '@/models/FamilyMember';
 import { verifyJWT } from '@/lib/auth';
@@ -29,7 +30,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         await connectToDatabase();
 
         // Ensure user owns the member
-        const member = await FamilyMember.findOne({ _id: id, userId: decoded.id });
+        const member = await FamilyMember.findOne({ 
+            _id: new mongoose.Types.ObjectId(id), 
+            userId: new mongoose.Types.ObjectId(decoded.id) 
+        });
         if (!member) {
             return NextResponse.json({ error: 'Member not found' }, { status: 404 });
         }
@@ -78,7 +82,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         await connectToDatabase();
 
         // 1. Delete the member
-        const deletedMember = await FamilyMember.findOneAndDelete({ _id: id, userId: decoded.id });
+        const deletedMember = await FamilyMember.findOneAndDelete({ 
+            _id: new mongoose.Types.ObjectId(id), 
+            userId: new mongoose.Types.ObjectId(decoded.id) 
+        });
         if (!deletedMember) {
             return NextResponse.json({ error: 'Member not found' }, { status: 404 });
         }

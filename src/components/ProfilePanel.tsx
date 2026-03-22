@@ -13,7 +13,7 @@ interface Props {
 
 export default function ProfilePanel({ isOpen, onClose }: Props) {
     const { user, logout } = useAuth();
-    const [familyMembers, setFamilyMembers] = useState([]);
+    const [familyMembers, setFamilyMembers] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingMember, setEditingMember] = useState<any>(null);
@@ -30,12 +30,18 @@ export default function ProfilePanel({ isOpen, onClose }: Props) {
             const res = await fetch('/api/family-members', {
                 headers: authHeaders()
             });
+            const data = await res.json();
+            
             if (res.ok) {
-                const data = await res.json();
-                setFamilyMembers(data);
+                // Ensure data is array before setting
+                setFamilyMembers(Array.isArray(data) ? data : []);
+            } else {
+                console.error(`Family fetch failed: ${res.status}`, data);
+                setFamilyMembers([]);
             }
         } catch (error) {
-            console.error("Failed to fetch family members");
+            console.error("Failed to fetch family members:", error);
+            setFamilyMembers([]);
         } finally {
             setLoading(false);
         }

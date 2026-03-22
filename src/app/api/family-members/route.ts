@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import connectToDatabase from '@/lib/db';
 import FamilyMember from '@/models/FamilyMember';
 import { verifyJWT } from '@/lib/auth';
@@ -25,7 +26,8 @@ export async function GET(req: Request) {
 
         await connectToDatabase();
         
-        const members = await FamilyMember.find({ userId: decoded.id })
+        const userId = new mongoose.Types.ObjectId(decoded.id);
+        const members = await FamilyMember.find({ userId })
             .populate({
                 path: 'caretakerId',
                 select: 'name email phone'
@@ -67,7 +69,7 @@ export async function POST(req: Request) {
         await connectToDatabase();
 
         const newMember = await FamilyMember.create({
-            userId: decoded.id,
+            userId: new mongoose.Types.ObjectId(decoded.id),
             name,
             age: Number(age),
             relation,
